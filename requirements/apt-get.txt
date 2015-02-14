@@ -4,8 +4,5 @@ cmake
 build-essential
 python-dev
 python-pip
-ruby-dev
-vim-nox
 screen
-tmux
 ctags

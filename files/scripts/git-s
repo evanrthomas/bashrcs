@@ -1,0 +1,11 @@
+#!/bin/bash
+bold=`tput bold`
+normal=`tput sgr0`
+echo -n "${bold}branch:: *"
+git rev-parse --abbrev-ref HEAD
+echo "${normal}"
+git log -1
+echo ""
+echo ""
+git status
+echo ""

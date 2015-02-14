@@ -1,168 +1,114 @@
-"vim plugin manager
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-
-Plugin 'tpope/vim-fugitive'
-
-"new color scheme
-Plugin 'altercation/vim-colors-solarized'
-
-" helps open files, similar to command p in sublime
-Plugin 'git://git.wincent.com/command-t.git'
-
-" good autocomplete
-if v:version > 703
-  Plugin 'Valloric/YouCompleteMe'
-endif
-
-" better sytanx highlint
-Plugin 'scrooloose/syntastic'
-
-" cool command prompt
-Plugin 'bling/vim-airline'
+"When moving to a new vim
+"Copy vimrc
+"Install vundle https://github.com/gmarik/vundle#about
+"run :BundleInstall Syntastic
+"run :BundleInstall Valloric/YouCompleteMe (you may have to install vim from source to to get this working)
+"compile you complete me
+"remove dumb 80 character line limit from ~/.vim/bundle/YouCompleteMe/style_format.sh
+"run :Bundleinstall terryma/vim-multiple-cursors
+"download vim fanfingtastic and put in ~/.vim/plugins
+"
 
 
-call vundle#end()            " required
-filetype plugin indent on    " required
+" Things required for vundle
+set nocompatible "should automatically be set once you customize your vimrc. Makes it so vi iMproved is not compatible with vi
+filetype plugin indent on
 
-"plugin specific commands
-"vim-airline
-set laststatus=2
-let g:airline_powerline_fonts =1
-set encoding=utf-8
 
-"sytanstic options
-let g:syntastic_always_populate_loc_list = 1 "when you have errors populates the list
 
+set rtp+=~/.vim/bundle/vundle
+call vundle#rc()
+Bundle 'gmarik/vundle'
+Bundle 'Syntastic'
+Bundle 'YouCompleteMe'
+Bundle 'ctrlp.vim'
+Bundle 'fatih/vim-go'
+
+set noswapfile
+
+let g:ctrlp_switch_buffer=1 "allow ctrlp to open the same file twice
+let g:syntastic_java_javac_config_file_enabled=1
+let g:syntastic_java_javac_classpath="./build/classes"
+
+let g:go_doc_keywordprg_enabled=0
 
 let mapleader=" "
+nmap <Leader>p :set paste!<CR>
+nmap <Leader>c :noh<CR>
 
-"escape from any setting
-imap <C-p> <Esc>
-vmap <C-p> <Esc>
-
-"disable autocomplete which is mapped to contorl p
-"let g:acp_enableStartup = 0
-
-" get shift tab to map to S-tab
-map <Esc>[Z <S-tab>
-ounmap <Esc>[Z
-
-"quick escape
-"imap jk <Esc>
-
-" quick save and quit in insert mode
-"imap ZZ <Esc>:wq<CR>
-
-"save and run current file as python script
-"nmap <Leader>rp :w<CR>:!python %<CR>
-if v:version > 703
-  "you complete me has a better goto definition than ctags
-  let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-  nmap <silent> <leader>jd :YcmCompleter GoTo<CR>
-else
-  "set up shortcuts for ctags
-  nmap <silent> <leader>jd <C-J><CR>
-
-endif
+set backspace=indent,eol,start
+set foldmethod=indent
+set foldlevel=99
 
 
-"if number of buffers = 1 quit vim, else unload buffer
-function! Quit()
-  if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
-    q
-  else
-    bd
-  endif
-endfunction
+" Change colorscheme from default to ron
+colorscheme ron
 
-function! GenCtags()
-  ! ctags -R -f ./.git/tags .
-endfunction
+" Turn on line numbering. Turn it on and of with set number and set number!
+set nu
+"set rnu
 
-"quick: save, close, reload
-nmap <Leader>w :w<CR>
-nmap <Leader>q :call Quit()<CR>
-nmap <Leader>r :e<CR>
-"nmap <Leader>W :w!<CR>
+" Treat long lines as break lines (useful when moving around in them)
+map j gj
+map k gk
 
 
-" all commands
-nmap <Leader>aw :wa<CR>
-nmap <Leader>aq :qa<CR>
-nmap <Leader>ar :windo e<CR>
+" opposite of ctrl o
+noremap <C-i> <C-I>
 
-"save the next acions in the clipboard regiter, capitol allows you to append
-" currently not working
-nmap <Leader>c "p
-nmap <Leader>C "P
+" Tab navigation like chrome
+noremap <S-tab> gT
+noremap <tab> gt
+noremap <C-t> :tabnew<CR>
 
-"remap Shift h,j,k,l to smart things
+" Fast scrolling up and down
+noremap J 4j
+noremap K 4k
+
+" beginning/end of line movement
 noremap H ^
 noremap L $
-noremap J <C-D>
-noremap K <C-U>
 
+" make v exit visual mode even when in visual block and visual line mode
+xnoremap v <esc>
 
-" toggle numbers and paste mode
-"nmap <Leader>n :set number!<CR>
-nmap <Leader>p :set paste!<CR>
+" make o concatenate lines (just because I don't have a better letter for it)
+xnoremap o J
 
-"" remaping some shortcuts i like
-" what shift j used to do
-noremap m :join<CR>
-" jump to matching bracket
-nmap <Leader>jb %
-" jump to next loc
-nmap <Leader>jn :lnext<CR>
-nmap <Leader>jp :lprevious<CR>
+" Set jk to be escape in insert mode
+inoremap jk <esc>
+inoremap jK <esc>
+inoremap Jk <esc>
+inoremap JK <esc>
 
-"correct Y behavior (yank to EOL like C or D)
-nmap Y y$
+" Set syntax on
+syntax on
 
-" is smart with word that wrap around
-nnoremap j gj
-nnoremap k gk
+"delete without putting into buffer
+map s "_
 
-"clear search hilight
-" this clears search history which is cleaner then disabling search
-" highlighting
-nmap <silent> <Leader>/ :let @/ = ""<CR>
+"Allow copy pasting from clipboard (doesn't work)
+set clipboard=unnamedplus
 
-"tabbing in visual mode
-vnoremap < <gv
-vnoremap > >gv
+" Return to last edit position when opening files
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
 
-"fast scroll
-"nnoremap <C-y> 3<C-y>
-"nnoremap <C-e> 3<C-e>
+" Remove trailing whitespace at the end of lines before every write.
+"(This is particularly important in conjunciton with autocmpl plugin, because you're constantly pressing space at the end of every line
+autocmd BufWritePre * :%s/\s\+$//e
 
-"browse buffers
-nmap <Leader>b :ls<CR>:b
+noremap q %
 
-"folding I like
-nmap zl zo
-nmap zh zc
-
-nmap zL zO
-nmap zH zC
-"fold and all fold all folds
-"its caps becauze zj and zk jumps between folds
-nmap zK zM
-nmap zJ zR
-"everything starts unfolded
-au BufWinEnter * normal zR
-
-" tab navigation like firefox
-:nmap <s-tab> :tabprevious<CR>
-:nmap <tab> :tabnext<CR>
-:nmap <C-t> :tabnew<CR>
+noremap <Leader>q qj
+"replay macro then go to next line, map tilda because you can press tilda
+"multiple times
+noremap <Leader>l ^@jj^
+noremap ` ^@jj^
+noremap <Leader>p @j
+noremap <Leader>a :normal @j
 
 
 " change windows
@@ -172,109 +118,122 @@ nmap <silent> <C-h> :wincmd h<CR>
 nmap <silent> <C-l> :wincmd l<CR>
 
 " new frame from window
-nmap <C-w>h :topleft  vnew<CR>
-nmap <C-w>l :botright vnew<CR>
-nmap <C-w>k :topleft  new<CR>
-nmap <C-w>j :botright new<CR>
+" nmap <C-w>h :topleft  vnew<CR>
+" nmap <C-w>l :botright vnew<CR>
+" nmap <C-w>k :topleft  new<CR>
+" nmap <C-w>j :botright new<CR>
+
+" open current buffer in new window
+nmap <C-w>h :exe 'topleft  vnew '.expand('%:p')<CR>
+nmap <C-w>l :exe 'botright vnew '.expand('%:p')<CR>
+nmap <C-w>k :exe 'topleft  new '.expand('%:p')<CR>
+nmap <C-w>j :exe 'botright new '.expand('%:p')<CR>
 
 " new frame from frame
-nmap <C-f>h :leftabove  vnew<CR>
-nmap <C-f>l :rightbelow vnew<CR>
-nmap <C-f>k :leftabove  new<CR>
-nmap <C-f>j :rightbelow new<CR>
+" nmap <C-f>h :leftabove  vnew<CR>
+" nmap <C-f>l :rightbelow vnew<CR>
+" nmap <C-f>k :leftabove  new<CR>
+" nmap <C-f>j :rightbelow new<CR>
 
-" netrw
-nmap <Leader>o :Ex.<CR>
-nmap <Leader>O :e.<CR>
-" case insensitive
-let g:netrw_sort_options = "i"
-"change sorting sequence
-" newrw_sort_sequence =
+" new frame from frame
+nmap <C-f>h :exe 'leftabove  vnew '.expand('%p')<CR>
+nmap <C-f>l :exe 'rightbelow vnew '.expand('%p')<CR>
+nmap <C-f>k :exe 'leftabove  new '.expand('%p')<CR>
+nmap <C-f>j :exe 'rightbelow new '.expand('%p')<CR>
 
-" general
-set hidden
-set history=1000
-set virtualedit=onemore
-set nospell
+" easy split resizing
+nnoremap <silent> <C-Right> <C-w>>
+nnoremap <silent> <C-Left> <C-w><lt>
+nnoremap <silent> <C-Up> <C-w>+
+nnoremap <silent> <C-Down> <C-w>-
 
-"" ui
-"silent means it doesn't  complain if it doesn't exits
-silent! colorscheme gentoo
-silent! colorscheme solarized
-
-set background=dark
-"set guifont=Consolas:h9:cANSI
-"let g:solarized_visibility = "high"
-"let g:solarized_contrast = "high"
-"let g:solarized_termtrans = 1
-"let g:solarized_termcolors=256
-
-
-set showmode
-
-set ruler
-set number
-set showmatch
 
 " searching
 set ignorecase
 set smartcase
 set incsearch
 set hlsearch
+set ic "ignore case
+set hls "Higlhight search
 
-" navigation
-set whichwrap=b,s,h,l,<,>,[,]
-set scrolljump=5
-set scrolloff=3
-set gdefault
+" Wrap text instead of being on one line
+"set lbr
 
-" tab formatting
+"tabs
+set expandtab "Use spaces instead of tabs
+set smarttab "Be smart when using tabs ;)
+" 1 tab == 2 spaces
 set shiftwidth=2
-set smarttab
 set softtabstop=2
-set expandtab
-set tabstop=2
-set autoindent
+set ai "Auto indent (copy indent from current line onto next line)
+set si "Smart indent (indent where the syntax would want an indent)
+set wrap "Wrap lines
+" Indent automatically depending on filetype
+filetype indent on
 
-" modify the word deliminiators
-set iskeyword-=_
-
-"iterm magic lets mouse and scroll work
-set mouse=a
-
-" syntax and folding
-syntax enable
-set pastetoggle=<F12>
-"for python
-"set foldmethod=syntax
-set foldmethod=indent
-
-" correctly interpret file types
-au BufNewFile,BufRead *.pde set filetype=c
-au BufNewFile,BufRead *.pic set filetype=ibasic
-au BufNewFile,BufRead *.bas set filetype=ibasic
-
-"change folding color
-hi Folded ctermbg=Black
+autocmd BufRead,BufNewFile *go setlocal filetype=go
 
 
-"white spaces
-function ShowSpaces(...)
-  let @/='\v(\s+$)|( +\ze\t)'
-  let oldhlsearch=&hlsearch
-  if !a:0
-    let &hlsearch=!&hlsearch
-  else
-    let &hlsearch=a:1
-  end
-  return oldhlsearch
-endfunction
+map <Leader>j :rightb vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+nmap <Leader>h :sp <CR>:exec("tag ".expand("<cword>"))<CR>
+nmap <Leader>s :exec("ts ".expand("<cword>"))<CR>
+nmap <Leader>] <C-]>
 
-function TrimSpaces() range
-  let oldhlsearch=ShowSpaces(1)
-  execute a:firstline.",".a:lastline."substitute ///gec"
-  let &hlsearch=oldhlsearch
-endfunction
+:set laststatus=2
+:ca path echo expand('%:p')<CR>
+nmap <C-w>e <C-w>T
+nmap <C-w>t <C-w>T
 
-command -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
-command -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
+:ca runpy !python '%:p'
+:ca rungo !go run '%:p'
+:ca genCtags !ctags `find .`<CR>
+" Rename tabs to show tab number.
+" (Copied from http://stackoverflow.com/questions/5927952/whats-implementation-of-vims-default-tabline-function)
+if exists("+showtabline")
+  function! MyTabLine()
+    let s = ''
+    let wn = ''
+    let t = tabpagenr()
+    let i = 1
+
+    while i <= tabpagenr('$')
+      let buflist = tabpagebuflist(i)
+      let winnr = tabpagewinnr(i)
+      let s .= '%' . i . 'T'
+      let s .= (i == t ? '%1*' : '%2*')
+      let s .= ' '
+      let wn = tabpagewinnr(i,'$')
+
+      let s .= '%#TabNum#'
+      let s .= i
+      " let s .= '%*'
+      let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+      let bufnr = buflist[winnr - 1]
+      let file = bufname(bufnr)
+      let buftype = getbufvar(bufnr, 'buftype')
+        if buftype == 'nofile'
+          if file =~ '\/.'
+            let file = substitute(file, '.*\/\ze.', '', '')
+          endif
+        else
+          let file = fnamemodify(file, ':p:t')
+        endif
+
+      if file == ''
+        let file = '[No Name]'
+      endif
+
+      let s .= ' ' . file . ' '
+      let i = i + 1
+    endwhile
+    let s .= '%T%#TabLineFill#%='
+    let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
+    return s
+  endfunction
+
+  set stal=2
+  set tabline=%!MyTabLine()
+  set showtabline=1
+  highlight link TabNum Special
+endif
+

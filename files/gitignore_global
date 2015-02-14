@@ -1,21 +1,7 @@
-# Folder view configuration files
-.DS_Store
-Desktop.ini
-
-#ctags
-tags
-
-# Thumbnail cache files
-._*
-Thumbs.db
-
-# Files that might appear on external disks
-.Spotlight-V100
-.Trashes
-
-#pycharm files
-*.idea
-
-#vim temp files
 *.swp
 *.swo
+*.swn
+*.pyc
+*.o
+tags
+dumblib
