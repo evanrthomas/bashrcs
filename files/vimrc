@@ -11,18 +11,22 @@
 
 
 " Things required for vundle
-set nocompatible "should automatically be set once you customize your vimrc. Makes it so vi iMproved is not compatible with vi
-filetype plugin indent on
-
+set nocompatible              " be iMproved, required
+filetype off                  " required
 
 
 set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
-Bundle 'gmarik/vundle'
-Bundle 'Syntastic'
-Bundle 'YouCompleteMe'
-Bundle 'ctrlp.vim'
-Bundle 'fatih/vim-go'
+call vundle#begin()
+Plugin 'gmarik/vundle'
+Plugin 'Syntastic'
+if v:version > 703
+  Plugin 'Valloric/YouCompleteMe'
+endif
+Plugin 'ctrlp.vim'
+Plugin 'fatih/vim-go'
+call vundle#end()
+
+filetype plugin indent on    " required
 
 set noswapfile
 
